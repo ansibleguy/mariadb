@@ -15,16 +15,10 @@ platforms:
       - name: 'test-ag-mdb'
         ipv4_address: '192.168.10.1'
     groups: [grp_tester]
-
-    # docker config
     docker_host: 'tcp://molecule-docker.local:2375'
-    purge_networks: true
-    image: 'debian:12-slim'
-    dockerfile: 'Dockerfile_debian12_systemd.j2'
-    build_image: yes
+    image: 'ansible0guy/molecule:debian-latest'
     tmpfs: ['/tmp', '/run', '/run/lock']
     privileged: true
-    command: '/sbin/init'
 
 provisioner:
   name: ansible
