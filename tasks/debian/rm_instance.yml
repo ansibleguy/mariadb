@@ -17,7 +17,7 @@
     use_shell: true
   when:
     - not force_removal
-    - removal_prompt.user_input == 'yes'
+    - removal_prompt.user_input | bool
   register: removal_dump
   ignore_errors: true  # if the db service is already stopped..
 
@@ -47,7 +47,7 @@
     state: stopped
   when: >
     removal_dump_prompt.user_input is undefined or
-    removal_dump_prompt.user_input == 'yes'
+    removal_dump_prompt.user_input | bool
   register: mariadb_instance_removal
   failed_when:
     - mariadb_instance_removal.failed
@@ -63,7 +63,7 @@
     state: stopped
   when: >
     removal_dump_prompt.user_input is undefined or
-    removal_dump_prompt.user_input == 'yes'
+    removal_dump_prompt.user_input | bool
   register: mariadb_backup_removal
   failed_when:
     - mariadb_backup_removal.failed
@@ -85,4 +85,4 @@
     - "/etc/systemd/system/{{ backup.service_prefix }}backup-mariadb-{{ name }}.timer"
   when: >
     removal_dump_prompt.user_input is undefined or
-    removal_dump_prompt.user_input == 'yes'
+    removal_dump_prompt.user_input | bool
