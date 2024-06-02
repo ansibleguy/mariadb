@@ -32,73 +32,7 @@ ansible-galaxy install ansibleguy.infra_mariadb --roles-path ./roles
 ansible-galaxy install -r requirements.yml
 ```
 
-## Functionality
-
-* Package installation
-  * Ansible dependencies (_minimal_)
-  * MariaDB
-
-* Configuration
-  * Multiple MariaDB Instances
-  * Database and User creation/deletion
-  * Startup-Check-Script that supports multiple instances
-
-  * Default opt-in:
-    * Running secure-installation tasks
-    * Swappiness lowered
-    * Open file limit increased (_sysctl, service, db_)
-
-  * Default opt-outs:
-    * DB Backup Job
-
-  * Default config:
-    * Instance datadir: "/var/lib/mysql/instance_${KEY}/"
-    * Instance config: "/etc/mysql/instance.conf.d/server_${KEY}.cnf"
-    * Service restart on failure
-    * Logging to syslog
-    * Bind only to localhost
-    * SSL OFF
-    * Slow-Query logs
-    * InnoDB file per table
-    * DB DNS-lookups disabled
-    * _for more info check out the example below_
-
-## Info
-
-* **WARNING:** This role expects that the **default mariadb/mysql instance** (_mysql.service/mariadb.service_) on the target system is not and will not be used!<br>
-It's **socket and port is changed** by running this role!
-
-
-* **WARNING:** If you are running your db servers in an active-active configuration you should **NEVER** run the role on both nodes at the same time!<br>
-Else the user-/db-creation tasks might break your sync!
-
-
-* **Note:** this role currently only supports debian-based systems
-
-
-* **Note:** Most of the role's functionality can be opted in or out.
-
-  For all available options - see the default-config located in [the main defaults-file](https://github.com/ansibleguy/infra_mariadb/blob/latest/defaults/main/1_main.yml)!
-
-
-* **Note:** We use the official community modules for [database](https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_db_module.html) and [user](https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_user_module.html#ansible-collections-community-mysql-mysql-user-module) configuration. [Replication support](https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_replication_module.html#ansible-collections-community-mysql-mysql-replication-module) might get added later on.
-
-
-* **Note:** Certificate management might be added later on to this role.<br>
-For now, you need to provide the certificates manually (_placed in /etc/mysql/ssl/{INSTANCE_KEY}/[ca|cert|key].pem_)
-
-
-* **Note:** You need to provide the [mysql-user](https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_user_module.html#ansible-collections-community-mysql-mysql-user-module) privileges EXACTLY as returned by a SHOW GRANT statement!
-
-
-* **Tip:** If you are mounting the datadir explicitly - you should set some mount options to optimize performance:
-  * noatime,nodiratime
-
-
-* **Warning:** Connections via TCP/IP to localhost/127.0.0.1 will not work by default when 'skip-name-resolve' is enabled!
-
-  It will throw this error: ```Host '127.0.0.1' is not allowed to connect to this MariaDB server```
-
+----
 
 ## Usage
 
@@ -202,6 +136,77 @@ To debug errors - you can set the 'debug' variable at runtime:
 ```bash
 ansible-playbook -K -D -i inventory/hosts.yml playbook.yml -e debug=yes
 ```
+
+----
+
+## Functionality
+
+* Package installation
+  * Ansible dependencies (_minimal_)
+  * MariaDB
+
+* Configuration
+  * Multiple MariaDB Instances
+  * Database and User creation/deletion
+  * Startup-Check-Script that supports multiple instances
+
+  * Default opt-in:
+    * Running secure-installation tasks
+    * Swappiness lowered
+    * Open file limit increased (_sysctl, service, db_)
+
+  * Default opt-outs:
+    * DB Backup Job
+
+  * Default config:
+    * Instance datadir: "/var/lib/mysql/instance_${KEY}/"
+    * Instance config: "/etc/mysql/instance.conf.d/server_${KEY}.cnf"
+    * Service restart on failure
+    * Logging to syslog
+    * Bind only to localhost
+    * SSL OFF
+    * Slow-Query logs
+    * InnoDB file per table
+    * DB DNS-lookups disabled
+    * _for more info check out the example below_
+
+## Info
+
+* **WARNING:** This role expects that the **default mariadb/mysql instance** (_mysql.service/mariadb.service_) on the target system is not and will not be used!<br>
+It's **socket and port is changed** by running this role!
+
+
+* **WARNING:** If you are running your db servers in an active-active configuration you should **NEVER** run the role on both nodes at the same time!<br>
+Else the user-/db-creation tasks might break your sync!
+
+
+* **Note:** this role currently only supports debian-based systems
+
+
+* **Note:** Most of the role's functionality can be opted in or out.
+
+  For all available options - see the default-config located in [the main defaults-file](https://github.com/ansibleguy/infra_mariadb/blob/latest/defaults/main/1_main.yml)!
+
+
+* **Note:** We use the official community modules for [database](https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_db_module.html) and [user](https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_user_module.html#ansible-collections-community-mysql-mysql-user-module) configuration. [Replication support](https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_replication_module.html#ansible-collections-community-mysql-mysql-replication-module) might get added later on.
+
+
+* **Note:** Certificate management might be added later on to this role.<br>
+For now, you need to provide the certificates manually (_placed in /etc/mysql/ssl/{INSTANCE_KEY}/[ca|cert|key].pem_)
+
+
+* **Note:** You need to provide the [mysql-user](https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_user_module.html#ansible-collections-community-mysql-mysql-user-module) privileges EXACTLY as returned by a SHOW GRANT statement!
+
+
+* **Tip:** If you are mounting the datadir explicitly - you should set some mount options to optimize performance:
+  * noatime,nodiratime
+
+
+* **Warning:** Connections via TCP/IP to localhost/127.0.0.1 will not work by default when 'skip-name-resolve' is enabled!
+
+  It will throw this error: ```Host '127.0.0.1' is not allowed to connect to this MariaDB server```
+
+----
 
 ### Example
 
